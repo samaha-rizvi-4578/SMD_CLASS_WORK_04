@@ -3,7 +3,11 @@ import 'package:http/http.dart' as http;
 
 class PostService {
   static Future<List<Map<String, String>>> fetchBooks() async {
-    var url = Uri.https('www.googleapis.com', '/books/v1/volumes', {'q': 'http'});
+    var url = Uri.https(
+      'www.googleapis.com',
+      '/books/v1/volumes',
+      {'q': 'operating systems'},
+    );
 
     try {
       var response = await http.get(url);
@@ -22,6 +26,12 @@ class PostService {
             'author': (volumeInfo['authors'] != null)
                 ? (volumeInfo['authors'] as List).join(', ')
                 : 'Unknown Author',
+            'publisher': (volumeInfo['publisher'] ?? 'No Publisher').toString(),
+            'thumbnail': (volumeInfo.containsKey('imageLinks') &&
+                    volumeInfo['imageLinks'] != null &&
+                    volumeInfo['imageLinks']['thumbnail'] != null)
+                ? volumeInfo['imageLinks']['thumbnail'].toString()
+                : '',
           };
         }).toList();
       } else {
